@@ -14,7 +14,11 @@ import javax.persistence.OneToMany;
 @Entity(name="role")
 public class Role implements Serializable {
 
-	private static final long serialVersionUID = 7979028638168655724L;
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1600809193487331066L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="ID_ROLE", unique = true)

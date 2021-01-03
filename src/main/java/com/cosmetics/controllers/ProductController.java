@@ -76,14 +76,16 @@ private final Path root = Paths.get("uploads/Products");
 	}
 	@PostMapping("/upload")
 	public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file,@RequestParam("id") long id) {
-		
+		Product pp = new Product();
 		String message = "";
 	    try {
-	    	init();
 			try {
-				if(Files.exists(this.root.resolve("Product."+id+"."+FilenameUtils.getExtension(file.getOriginalFilename()))))
-				{Files.delete(this.root.resolve("Product."+id+"."+FilenameUtils.getExtension(file.getOriginalFilename())));}
-					
+				//if(Files.exists(this.root.resolve("Product."+id+"."+FilenameUtils.getExtension(file.getOriginalFilename()))))
+				//{Files.delete(this.root.resolve("Product."+id+"."+FilenameUtils.getExtension(file.getOriginalFilename())));}
+				pp = ProductService.findById(id).get();
+				pp.setPicture("Product."+id+"."+FilenameUtils.getExtension(file.getOriginalFilename()));
+				ProductService.save(pp);
+				
 			      Files.copy  (file.getInputStream(), 
 			    		  this.root.resolve("Product."+id+"."+FilenameUtils.getExtension(file.getOriginalFilename())));
 			    } catch (Exception e) {

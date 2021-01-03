@@ -1,5 +1,7 @@
 package com.cosmetics.controllers;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cosmetics.models.Order;
+import com.cosmetics.models.OrderProduct;
+import com.cosmetics.repositories.OrderProductRepository;
 import com.cosmetics.repositories.OrderRepository;
 
 @RestController
@@ -23,6 +27,8 @@ public class OrderController {
 
 	@Autowired
 	private OrderRepository OrderService;
+	@Autowired
+	private OrderProductRepository OrderProductService;
 	
 	@GetMapping("/GetAllOrders")
 	public List<Order> GetAllOrders()
@@ -32,8 +38,18 @@ public class OrderController {
 	
 	@PostMapping("/addOrder")
 	public Order addOrder(@RequestBody Order Order) {
-		
+		OrderService.save(Order);
+		Order.setOrde_date(LocalDate.now());
+		DateTimeFormatter  formatter = DateTimeFormatter.ofPattern("yyyy");
+	     String today = formatter.format(Order.getOrde_date());
+		Order.setMatricule("C"+Order.getId()+"D"+today);
 		return OrderService.save(Order);
+	}
+	
+	@PostMapping("/order")
+	public List<OrderProduct> addOrder(@RequestBody List<OrderProduct> Order) {
+		
+		return OrderProductService.saveAll(Order);
 	}
 
 	@PutMapping("/ModOrder")

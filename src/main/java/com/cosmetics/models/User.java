@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -24,13 +25,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity(name="user")
 public class User implements UserDetails {
 
+
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6984991797556637464L;
-	
+	private static final long serialVersionUID = 7325751389645179303L;
 	@Id 
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="ID_USER", unique = true)
 	private long id;
 	private String name;
@@ -40,8 +42,13 @@ public class User implements UserDetails {
 	private String phone;
 	private String adress;
 	private String username;
-	private String picture;
 	private String password;
+	private String city;
+	private String Salary;
+	@OneToMany(mappedBy = "livreur",fetch = FetchType.EAGER)
+	private Set<Order> ordersLivreur;
+	@OneToMany(mappedBy = "consultant",fetch = FetchType.EAGER)
+	private Set<Order> ordersConsultants;
 	@Transient
 	private Collection<? extends GrantedAuthority> authorities;
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -49,8 +56,8 @@ public class User implements UserDetails {
 	private Role role;
 
 	
-	public User(long id, String name, String surname, String mail, String phone, String adress, String username,
-			String picture, String password, Role role,Set<User> users,String roles) {
+	public User(long id, String name, String surname, String mail, String phone, String adress, String username
+			, String password, Role role,String roles) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -59,7 +66,6 @@ public class User implements UserDetails {
 		this.phone = phone;
 		this.adress = adress;
 		this.username = username;
-		this.picture = picture;
 		this.password = password;
 		this.role = role;
 		 List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
@@ -74,6 +80,54 @@ public class User implements UserDetails {
 		super();
 	}
 
+
+
+
+	public String getSalary() {
+		return Salary;
+	}
+
+
+
+	public void setSalary(String salary) {
+		Salary = salary;
+	}
+
+
+
+	public String getCity() {
+		return city;
+	}
+
+
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+
+
+	public Set<Order> getOrdersLivreur() {
+		return ordersLivreur;
+	}
+
+
+
+	public void setOrdersLivreur(Set<Order> ordersLivreur) {
+		this.ordersLivreur = ordersLivreur;
+	}
+
+
+
+	public Set<Order> getOrdersConsultants() {
+		return ordersConsultants;
+	}
+
+
+
+	public void setOrdersConsultants(Set<Order> ordersConsultants) {
+		this.ordersConsultants = ordersConsultants;
+	}
 
 
 
@@ -123,14 +177,6 @@ public class User implements UserDetails {
 
 	public void setAdress(String adress) {
 		this.adress = adress;
-	}
-
-	public String getPicture() {
-		return picture;
-	}
-
-	public void setPicture(String picture) {
-		this.picture = picture;
 	}
 
 	public String getPassword() {

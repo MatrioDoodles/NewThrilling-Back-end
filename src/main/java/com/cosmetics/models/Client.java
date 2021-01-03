@@ -13,12 +13,13 @@ import javax.persistence.OneToMany;
 
 @Entity(name="client")
 public class Client implements Serializable {
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7642024441151858270L;
+	private static final long serialVersionUID = -5200184481705165473L;
 	@Id 
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="ID_CLIENT", unique = true)
 	private long id;
 	private String name;
@@ -28,16 +29,8 @@ public class Client implements Serializable {
 	private String adress;
 	private Float amount_bought;
 	@OneToMany(mappedBy = "client",fetch = FetchType.EAGER)
-	private Set<Order> orders;
-	@OneToMany(mappedBy = "client",fetch = FetchType.EAGER)
 	private Set<Invoice> invoices;
 	
-	public Set<Order> getOrders() {
-		return orders;
-	}
-	public void setOrders(Set<Order> orders) {
-		this.orders = orders;
-	}
 	public Set<Invoice> getInvoices() {
 		return invoices;
 	}

@@ -16,12 +16,13 @@ import javax.persistence.OneToOne;
 @Entity(name="invoice")
 public class Invoice implements Serializable {
 
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 418548089982799376L;
+	private static final long serialVersionUID = -36183869276039051L;
 	@Id 
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="ID_INVOICE", unique = true)
 	private long id;
 	private Date creation_date;
