@@ -61,8 +61,28 @@ public class OrderController {
 	public Order GetOrderByid(@PathVariable long id) {
 		return OrderService.findById(id).get();
 	}
+	@GetMapping("/GetOrderByConsultantNull")
+	public List<Order> GetOrderByConsultantNull() {
+		return OrderService.findByconsultantIsNull();
+	}
+	@GetMapping("/GetOrderByConsultant/{username}")
+	public List<Order> GetOrderByConsultant(@PathVariable String username) {
+		return OrderService.findByconsultant_username(username);
+	}
+	@GetMapping("/GetOrderByCity/{city}")
+	public List<Order> GetOrderByCity(@PathVariable String city) {
+		return OrderService.findBycity(city);
+	}
+	@GetMapping("/GetOrderByLivreur/{username}")
+	public List<Order> GetOrderByLivreur(@PathVariable String username) {
+		return OrderService.findBylivreur_username(username);
+	}
 
-	@DeleteMapping("/DelOrder{Order}")
+	@GetMapping("/GetProductsOfOrder/{id}")
+	public List<OrderProduct> GetProductsOfOrder(@PathVariable long id) {
+		return OrderProductService.findByOrder_id(id);
+	}
+	@DeleteMapping("/DelOrder/{Order}")
 	public void DelAscenseur(@PathVariable long Order) {
 		
 		OrderService.deleteById(Order);

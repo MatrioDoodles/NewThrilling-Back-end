@@ -15,6 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 
 @Entity(name="T_order")
@@ -36,6 +39,7 @@ public class Order implements Serializable{
 	private Boolean shipped;
 	private Boolean aborted;
 	private LocalDate orde_date;
+	private LocalDate Shipping_date;
 	private String city;
 	private String client_name;
 	private String client_mail;
@@ -58,13 +62,21 @@ public class Order implements Serializable{
 	@JoinColumn(name="id_invoice")
 	private Invoice invoice;
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 	private Set<OrderProduct> orderproducts;
 	
 	
-	
+	public LocalDate getShipping_date() {
+		return Shipping_date;
+	}
+	public void setShipping_date(LocalDate shipping_date) {
+		Shipping_date = shipping_date;
+	}
+	@JsonIgnore
 	public Set<OrderProduct> getOrderproducts() {
 		return orderproducts;
 	}
+	@JsonIgnore
 	public void setOrderproducts(Set<OrderProduct> orderproducts) {
 		this.orderproducts = orderproducts;
 	}

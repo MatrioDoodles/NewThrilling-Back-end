@@ -56,6 +56,10 @@ public class UserController {
 	public List<User> getUserByRole(@PathVariable("role") String role){  
 	return userService.findByRole_label(role);  
 	}
+	@GetMapping("/searchUserByRoleAndCity/{role}/{city}")  
+	public List<User> getUserByRoleAndCity(@PathVariable("role") String role,@PathVariable("city") String city){  
+	return userService.findByRole_labelAndCity(role, city);  
+	}
 
 	@DeleteMapping("/DelUser/{User}")
 	public void DelAscenseur(@PathVariable long user) {

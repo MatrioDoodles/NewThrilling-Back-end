@@ -118,13 +118,13 @@ public class User implements UserDetails {
 	}
 
 
-
+	@JsonIgnore
 	public Set<Order> getOrdersConsultants() {
 		return ordersConsultants;
 	}
 
 
-
+	@JsonIgnore
 	public void setOrdersConsultants(Set<Order> ordersConsultants) {
 		this.ordersConsultants = ordersConsultants;
 	}

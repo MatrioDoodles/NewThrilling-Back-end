@@ -24,10 +24,10 @@ public class OrderProduct implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(unique = true)
 	private long id;
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_order")
 	private Order order;
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_product")
 	private Product product;
 	private long quantity;

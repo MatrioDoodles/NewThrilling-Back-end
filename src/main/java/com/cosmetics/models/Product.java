@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity(name = "product")
 public class Product implements Serializable {
@@ -39,6 +40,7 @@ public class Product implements Serializable {
 	private long amount;
 	private long supply_amount;
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 	private Set<OrderProduct> orderproducts;
 	@OneToMany(mappedBy = "product")
 	private Set<Comment> comments;
@@ -87,6 +89,7 @@ public class Product implements Serializable {
 		return orderproducts;
 	}
 
+	@JsonIgnore
 	public void setOrderproducts(Set<OrderProduct> orderproducts) {
 		this.orderproducts = orderproducts;
 	}
