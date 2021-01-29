@@ -60,7 +60,11 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
             .exceptionHandling().authenticationEntryPoint(jwtUnAuthorizedResponseAuthenticationEntryPoint).and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
-            .antMatchers("/products/GetAllProducts","/products/img/**","/orders/addOrder","/orders/order").permitAll()
+            .antMatchers("/products/GetAllProducts","/products/img/**"
+            		,"/orders/addOrder","/orders/order","/categories/GetAllCategorys",
+            		"/products/GetProductsByLabel/**","/products/**","/comments/GetAllCommentsByProduct/**",
+            		"/comments/addComment","/comments/GetAllCommentsByProduct/**","/products/GetRandomProducts"
+            		).permitAll()
             .anyRequest().authenticated();
 
        httpSecurity

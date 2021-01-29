@@ -76,10 +76,12 @@ public class Product implements Serializable {
 		this.description = description;
 	}
 
+	@JsonIgnore
 	public Set<Comment> getComments() {
 		return comments;
 	}
 
+	@JsonIgnore
 	public void setComments(Set<Comment> comments) {
 		this.comments = comments;
 	}

@@ -5,7 +5,9 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,28 @@ private final Path root = Paths.get("uploads/Products");
 	public List<Product> GetAllProducts()
 	{
 		return ProductService.findAll();
+	}
+	
+	@GetMapping("/GetRandomProducts")
+	public List<Product> GetRandomProducts()
+	{
+		List<Product> produitsResult = ProductService.findAll() ;
+		List<Product> produits = new ArrayList<Product>() ;
+		for(int i=0;i<9;i++)
+		{
+			Random random = new Random();
+			int number = random.nextInt((int)produitsResult.size());
+			produits.add(produitsResult.get(number));
+			
+		}
+		
+		return produits;
+	}
+	
+	@GetMapping("/GetProductsByLabel/{label}")
+	public List<Product> GetProductsByLabel(@PathVariable String label)
+	{
+		return ProductService.findBylabel(label);
 	}
 	
 	@PostMapping("/addProduct")

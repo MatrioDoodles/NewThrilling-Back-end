@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cosmetics.models.Order;
 import com.cosmetics.models.OrderProduct;
+import com.cosmetics.models.Product;
 import com.cosmetics.repositories.OrderProductRepository;
 import com.cosmetics.repositories.OrderRepository;
+import com.cosmetics.repositories.ProductRepository;
 
 @RestController
 @CrossOrigin("*")
@@ -29,6 +31,8 @@ public class OrderController {
 	private OrderRepository OrderService;
 	@Autowired
 	private OrderProductRepository OrderProductService;
+	@Autowired
+	private ProductRepository ProductService;
 	
 	@GetMapping("/GetAllOrders")
 	public List<Order> GetAllOrders()
@@ -49,6 +53,13 @@ public class OrderController {
 	@PostMapping("/order")
 	public List<OrderProduct> addOrder(@RequestBody List<OrderProduct> Order) {
 		
+		Product pp = new Product();
+		for(int i=0;i<Order.size();i++)
+		{ 
+			pp = Order.get(i).getProduct();
+			pp.setAmount( pp.getAmount() - Order.get(i).getQuantity());
+			ProductService.save(pp);
+		}
 		return OrderProductService.saveAll(Order);
 	}
 
