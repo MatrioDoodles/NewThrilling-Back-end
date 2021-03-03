@@ -1,6 +1,7 @@
 package com.cosmetics.models;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,6 +27,7 @@ public class Comment implements Serializable {
 	private String nom;
 	private int rating;
 	private boolean approuved;
+	private Date dateCom;
 	@ManyToOne
 	@JoinColumn(name = "id_product")
 	private Product product;
@@ -37,6 +39,15 @@ public class Comment implements Serializable {
 
 	public void setNom(String nom) {
 		this.nom = nom;
+	}
+
+	
+	public Date getDateCom() {
+		return dateCom;
+	}
+
+	public void setDateCom(Date dateCom) {
+		this.dateCom = dateCom;
 	}
 
 	public boolean isApprouved() {

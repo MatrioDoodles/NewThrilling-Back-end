@@ -63,7 +63,8 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/products/GetAllProducts","/products/img/**"
             		,"/orders/addOrder","/orders/order","/categories/GetAllCategorys",
             		"/products/GetProductsByLabel/**","/products/**","/comments/GetAllCommentsByProduct/**",
-            		"/comments/addComment","/comments/GetAllCommentsByProduct/**","/products/GetRandomProducts"
+            		"/comments/addComment","/products/GetRandomProducts","/comments/GetAllCommentsByProductApprouved/**",
+            		"/comments/addComment"
             		).permitAll()
             .anyRequest().authenticated();
 

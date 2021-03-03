@@ -36,6 +36,7 @@ public class Product implements Serializable {
 	private String picture;
 	private Date expiring_date;
 	private Boolean perishable;
+	@Column(length = 2000)
 	private String description;
 	private long amount;
 	private long supply_amount;
