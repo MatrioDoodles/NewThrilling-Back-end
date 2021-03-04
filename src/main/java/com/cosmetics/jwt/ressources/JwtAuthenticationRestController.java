@@ -25,7 +25,7 @@ import com.cosmetics.jwt.JwtTokenUtil;
 import com.cosmetics.models.User;
 
 @RestController
-@CrossOrigin(origins="http://localhost:4200,https://newthrillingapp.netlify.app/")
+@CrossOrigin("*")
 public class JwtAuthenticationRestController {
 
   @Value("${jwt.http.request.header}")
