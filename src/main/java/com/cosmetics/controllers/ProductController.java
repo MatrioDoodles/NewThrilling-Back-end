@@ -1,15 +1,24 @@
 package com.cosmetics.controllers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
+import com.cosmetics.configuration.BucketName;
+import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.ContentType.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -35,17 +44,11 @@ import com.cosmetics.repositories.ProductRepository;
 @RestController
 @CrossOrigin("*")
 @RequestMapping(value = "/products")
+@AllArgsConstructor
 public class ProductController {
 
-private final Path root = Paths.get("uploads/Products");
-	
-	public void init() {
-	    try {
-	      Files.createDirectory(root);
-	    } catch (IOException e) {
-	      throw new RuntimeException("Could not initialize folder for upload!");
-	    }
-	  }
+	private final AmazonS3 amazonS3;
+
 	@Autowired
 	private ProductRepository ProductService;
 	
@@ -98,8 +101,57 @@ private final Path root = Paths.get("uploads/Products");
 		ProductService.deleteById(Product);
 			//return "Produit Supprimé";
 	}
+
 	@PostMapping("/upload")
-	public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file,@RequestParam("id") long id) {
+	public void upload(@RequestParam("file") MultipartFile file,@RequestParam("id") long id) {
+		Optional<Map<String, String>> optionalMetaData;
+		InputStream inputStream;
+		if (file.isEmpty()) {
+			throw new IllegalStateException("Cannot upload empty file");
+		}
+		//Check if the file is an image
+		if (!Arrays.asList(ContentType.IMAGE_PNG.getMimeType(),
+				ContentType.IMAGE_BMP.getMimeType(),
+				ContentType.IMAGE_GIF.getMimeType(),
+				ContentType.IMAGE_JPEG.getMimeType()).contains(file.getContentType())) {
+			throw new IllegalStateException("File uploaded is not an image");
+		}
+		Map<String, String> metadata = new HashMap<>();
+		metadata.put("Content-Type", file.getContentType());
+		metadata.put("Content-Length", String.valueOf(file.getSize()));
+		String path = String.format("%s/%s", BucketName.TODO_IMAGE.getBucketName(), UUID.randomUUID());
+		String fileName = String.format("Product."+id+""+FilenameUtils.getExtension(file.getOriginalFilename()));
+		Product pp = ProductService.findById(id).get();
+		pp.setPictureName(fileName);
+		pp.setPicturePath(path);
+		ProductService.save(pp);
+		optionalMetaData = Optional.of(metadata);
+		ObjectMetadata objectMetadata = new ObjectMetadata();
+		optionalMetaData.ifPresent(map -> {
+			if (!map.isEmpty()) {
+				map.forEach(objectMetadata::addUserMetadata);
+			}
+		});
+		try {
+			amazonS3.putObject(path, fileName, file.getInputStream(), objectMetadata);
+		} catch (AmazonServiceException | IOException e) {
+			throw new IllegalStateException("Failed to upload the file", e);
+		}
+	}
+
+	@GetMapping("/img/{id}")	
+	@ResponseBody
+	public byte[] download(@PathVariable long id) {
+		Product pp = ProductService.findById(id).get();
+		try {
+			S3Object object = amazonS3.getObject(pp.getPicturePath(), pp.getPictureName());
+			S3ObjectInputStream objectContent = object.getObjectContent();
+			return IOUtils.toByteArray(objectContent);
+		} catch (AmazonServiceException | IOException e) {
+			throw new IllegalStateException("Failed to download the file", e);
+		}
+	}
+	/*public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file,@RequestParam("id") long id) {
 		Product pp = new Product();
 		String message = "";
 	    try {
@@ -109,8 +161,8 @@ private final Path root = Paths.get("uploads/Products");
 				pp = ProductService.findById(id).get();
 				pp.setPicture("Product."+id+"."+FilenameUtils.getExtension(file.getOriginalFilename()));
 				ProductService.save(pp);
-				
-			      Files.copy  (file.getInputStream(), 
+
+			      Files.copy  (file.getInputStream(),
 			    		  this.root.resolve("Product."+id+"."+FilenameUtils.getExtension(file.getOriginalFilename())));
 			    } catch (Exception e) {
 			      throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
@@ -121,10 +173,8 @@ private final Path root = Paths.get("uploads/Products");
 	      message = "Could not upload the file: " + file.getOriginalFilename() + "!";
 	      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
 	    }
-	}
-	@GetMapping("/img/{id}")	
-	@ResponseBody
-	public ResponseEntity<Resource> getimg(@PathVariable long id)
+	}*/
+/*	public ResponseEntity<Resource> getimg(@PathVariable long id)
 	{   
 		try {	
 		      Path file = root.resolve(ProductService.findById(id).get().getPicture());
@@ -140,5 +190,5 @@ private final Path root = Paths.get("uploads/Products");
 		      throw new RuntimeException("Error: " + e.getMessage());
 		    }
 	    
-	}
+	}*/
 }

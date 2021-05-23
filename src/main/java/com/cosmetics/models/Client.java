@@ -1,17 +1,22 @@
 package com.cosmetics.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.io.Serializable;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 @Entity(name="client")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Client implements Serializable {
 	
 	/**
@@ -28,51 +33,8 @@ public class Client implements Serializable {
 	private String phone;
 	private String adress;
 	private Float amount_bought;
-	@OneToMany(mappedBy = "client",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "client",fetch = FetchType.LAZY)
 	private Set<Invoice> invoices;
-	
-	public Set<Invoice> getInvoices() {
-		return invoices;
-	}
-	public void setInvoices(Set<Invoice> invoices) {
-		this.invoices = invoices;
-	}
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getMail() {
-		return mail;
-	}
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
-	public String getPhone() {
-		return phone;
-	}
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-	public String getAdress() {
-		return adress;
-	}
-	public void setAdress(String adress) {
-		this.adress = adress;
-	}
-	public Float getAmount_bought() {
-		return amount_bought;
-	}
-	public void setAmount_bought(Float amount_bought) {
-		this.amount_bought = amount_bought;
-	}
-	
+
 
 }

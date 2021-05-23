@@ -1,4 +1,4 @@
-package com.cosmetics;
+package com.cosmetics.configuration;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

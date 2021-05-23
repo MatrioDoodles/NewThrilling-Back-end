@@ -3,17 +3,21 @@ package com.cosmetics.models;
 import java.io.Serializable;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity(name="category")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Category implements Serializable {
 	
 	
@@ -27,34 +31,8 @@ public class Category implements Serializable {
 	private long id;
 	private String label;
 	private String description;
-	@OneToMany(mappedBy = "category",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "category",fetch = FetchType.LAZY)
+	@Getter(onMethod_ = @JsonIgnore)
 	private Set<Product> products;
-	
-	
-	@JsonIgnore
-	public Set<Product> getProducts() {
-		return products;
-	}
-	@JsonIgnore
-	public void setProducts(Set<Product> products) {
-		this.products = products;
-	}
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
-	public String getLabel() {
-		return label;
-	}
-	public void setLabel(String label) {
-		this.label = label;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
+
 }
