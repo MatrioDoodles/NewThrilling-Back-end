@@ -120,7 +120,7 @@ public class ProductController {
 		metadata.put("Content-Type", file.getContentType());
 		metadata.put("Content-Length", String.valueOf(file.getSize()));
 		String path = String.format("%s/%s", BucketName.TODO_IMAGE.getBucketName(), UUID.randomUUID());
-		String fileName = String.format("Product."+id+""+FilenameUtils.getExtension(file.getOriginalFilename()));
+		String fileName = String.format("Product."+id+"."+FilenameUtils.getExtension(file.getOriginalFilename()));
 		Product pp = ProductService.findById(id).get();
 		pp.setPictureName(fileName);
 		pp.setPicturePath(path);
